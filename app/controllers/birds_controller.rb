@@ -10,7 +10,11 @@ class BirdsController < ApplicationController
   # POST /birds
   def create
     bird = Bird.create(bird_params)
-    render json: bird, status: :created
+    if bird.valid?
+      render json: bird, status: :created
+    else
+      render json: { errors: bird.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /birds/:id
@@ -23,7 +27,11 @@ class BirdsController < ApplicationController
   def update
     bird = find_bird
     bird.update(bird_params)
-    render json: bird
+    if bird.valid?
+      render json: bird
+    else
+      render json: { errors: bird.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # DELETE /birds/:id
